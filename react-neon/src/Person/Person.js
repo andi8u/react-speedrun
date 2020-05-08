@@ -13,13 +13,13 @@ to cancel the default behavior you can call e.preventDefault()
 e is a synthetic event and offers cross browser compatibility
 
 */
-const person = (props) => {
-   //{} is used to execute JS in JSX
+const person = (props) => { 
+   //apelarea de componenta se face dar rerandare nu daca nu sunt diferente
    return (
       <div className="Person">
-         <p>I'm a fish named {props.name}, mate here's my random weight {Math.random()}grams</p> 
-         <p>the passed props {props.children}</p>
-         <button onClick={props.click}> hit </button>
+         <p>I'm a fish named {props.name}, mate here's my random weight grams</p> 
+         <p>the passed props: {props.children}</p>
+         <button onClick={props.click}> delete  </button>
          
       <input type="text" onChange={props.inputChange} value={props.name}></input> //2way binding
    </div>)

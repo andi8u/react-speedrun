@@ -12,9 +12,9 @@ class App extends Component {
   // ARE THE ONLY THINGS THAT TRIGGER A RE-RENDER
   state = {
     persons: [
-      { name: 'mimi' },
-      { name: 'manu' },
-      { name: 'nina' }
+      { id: '1,', name: 'mimi' },
+      { id: '12', name: 'manu' },
+      { id: '13', name: 'nina' }
     ],
     someOtherStateThatIsNotUpdated: 'stastsy',
     showPersons: false
@@ -47,13 +47,27 @@ class App extends Component {
     })
   }
 
-  inputChanged = event => {
+  deletePersonHandler = (index) => {
+    //always make a copy before changing the state do not change directly on the state
+    //  const persons = this.state.persons.slice();
+    const persons = [...this.state.persons];
+    persons.splice(index, 1);
+    this.setState({ persons: persons })
+  }
+
+  nameChangeHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex(p => { return p.id === id; })
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+
+    person.name = event.target.value;
+
+    const persons= [...this.state.persons];
+    persons[personIndex] = person;
+
     this.setState({
-      persons: [
-        { name: event.target.value },
-        { name: 'manuuuuu' },
-        { name: 'nina' }
-      ]
+      persons: persons
     })
   }
   //this way of writing "()=>"the function always makes sure that this references the class
@@ -71,6 +85,23 @@ class App extends Component {
     const style = {
       background: 'blue'
     };
+    //this conditional output stype is preferred vs inline
+    //  click = {() => this.deletePersonHandler(index)} this style does not need binding 
+    //the key should be set here and not on the component itself
+    let personsArea = null;
+    if (this.state.showPersons) {
+      personsArea = (
+        <div>
+          {this.state.persons.map((person, index) => {
+            return <Person
+              key={person.id}
+              click={() => this.deletePersonHandler(index)}
+              name={person.name}
+              age={person.age}
+              inputChange={(event) => this.nameChangeHandler(event, person.id)} />
+          })}
+        </div>);
+    }
 
     return (
       //the code below is JSX not html - so actually JS
@@ -90,29 +121,17 @@ class App extends Component {
        such as onClick={this.handleClick}, you should bind that method.
        We generally recommend binding in the constructor or using the class fields syntax
       */
-      /** */
+      /**  
+       *  simple JS conditions can be used only inline stuff   // {this.state.showPersons ?   </div> : null
+       * or MAP
+       * */
       <div className="App">
         <h1>Hi this is neon tetra</h1>
 
         <button
           style={style}
           onClick={this.togglePersonsHandler}>haha</button>
-
-
-        {this.state.showPersons ?
-          <div>
-            <Person
-              name={this.state.persons[0].name}
-              height="108"
-              click={this.switchNameHander.bind(this, 'somenewname')}
-              inputChange={this.inputChanged}>
-            </Person>
-
-            <Person name={this.state.persons[1].name}>wohoo</Person>
-
-            <Person name={this.state.persons[2].name}>wohoo</Person>
-          </div> : null
-        }
+        {personsArea}
       </div>
     );
   }
