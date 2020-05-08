@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import './App.css'; //the CSS needs importing as well, webpack feature
 import Person from './Person/Person'
+import Radium from 'radium';
 //import with uppercase
+//to install package npm install --save radium
+
+/**
+ * debugging
+ * 
+ * source maps allows to show in the debugger the code I wrote and not the one that is executed in the browser
+ * error boundaries can be used to handle and show pretty unhandled errors - error boundary is a higher order comp
+ */
 
 //all the components will be contained in this root component
 //this is a class component
@@ -82,14 +91,36 @@ class App extends Component {
   render() {
     //inline style reusable components with own style in this way the style is scoped to the component
     // is not global like the other files
+    //Radium understands ':hover' or even media queries but i need to wrap the entire app in<StyleRoot>
+    /**
+     * styled components:
+     * can extract css together with DIV to a react component and can be used like a component
+     * styles are added to a css class which in turn is attached to a div
+     * styles can be extracted and used in several files
+     * in styled components we write regular CSS
+     * 
+     * CSS modules
+     * npm run eject to show all the webpack dependencies
+     * change to enable CSS module -  this depends on the reactspripts version used
+     * after this the CSS filke can be impoted as a JS objectect and can be used to assign classes, and the real thing
+     * that is rendered are some randomly generated clas names, this ensures that the styling is separated for each component
+     * 
+     */
+    
     const style = {
-      background: 'blue'
+      backgroundColor: 'green',
+      cursor: 'pointer',
+      ':hover': {
+        backgroundColor: 'blue',
+        color: 'black'
+      }
     };
     //this conditional output stype is preferred vs inline
     //  click = {() => this.deletePersonHandler(index)} this style does not need binding 
     //the key should be set here and not on the component itself
     let personsArea = null;
     if (this.state.showPersons) {
+      style.backgroundColor = 'red';
       personsArea = (
         <div>
           {this.state.persons.map((person, index) => {
@@ -102,6 +133,8 @@ class App extends Component {
           })}
         </div>);
     }
+
+    //styling: classes can be assignaed dynamically and conditonally
 
     return (
       //the code below is JSX not html - so actually JS
@@ -127,6 +160,7 @@ class App extends Component {
        * */
       <div className="App">
         <h1>Hi this is neon tetra</h1>
+        <p>testy</p>
 
         <button
           style={style}
@@ -137,6 +171,7 @@ class App extends Component {
   }
 }
 
-//
-export default App;
+//higher order component-> injects extra functionality
+//can be used for class or functional components
+export default Radium(App);
 //ctrl k s shortcuts
